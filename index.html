@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoLens</title>
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="dashboard">
+
+        <!-- Sidebar Navigation & Controls -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="brand-copy"><h1>AlgoLens</h1></div>
+            </div>
+
+            <div class="control-section">
+                <h3>INPUT ARRAY</h3>
+                <div class="input-group">
+                    <label>Values <span class="field-hint">comma-separated</span></label>
+                    <input type="text" id="array-input" value="45, 12, 88, 32, 19, 7, 56, 14, 62">
+                </div>
+                <button class="btn btn-outline w-full" id="btn-random">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    Randomize Array
+                </button>
+            </div>
+
+            <div class="control-section">
+                <h3>SEARCH TARGET</h3>
+                <div class="input-group">
+                    <input type="number" id="search-input" value="32" placeholder="e.g. 32">
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>SORTING</h3>
+                <div class="button-grid">
+                    <button class="btn btn-primary algo-btn" data-algo="bubble">Bubble Sort</button>
+                    <button class="btn btn-primary algo-btn" data-algo="selection">Selection Sort</button>
+                    <button class="btn btn-primary algo-btn" data-algo="insertion">Insertion Sort</button>
+                    <button class="btn btn-primary algo-btn" data-algo="merge">Merge Sort</button>
+                    <button class="btn btn-primary algo-btn" data-algo="quick">Quick Sort</button>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>SEARCHING</h3>
+                <div class="button-grid">
+                    <button class="btn btn-secondary algo-btn" data-algo="linear">Linear Search</button>
+                    <button class="btn btn-secondary algo-btn" data-algo="binary">Binary Search</button>
+                </div>
+            </div>
+
+            <div class="slider-section mt-auto">
+                <label for="speed-range" class="slider-label">Animation Speed <span id="speed-value">300ms</span></label>
+                <input type="range" id="speed-range" min="10" max="1000" value="300" class="slider"
+                    aria-label="Speed Control">
+                <div class="speed-hints">
+                    <span>Fast</span>
+                    <span>Slow</span>
+                </div>
+
+                <button class="btn btn-danger w-full mt-4" id="btn-stop" disabled>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path>
+                    </svg>
+                    Stop Execution
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Computing Workspace -->
+        <main class="workspace">
+            <header class="workspace-header">
+                <div class="algo-info">
+                    <div class="workspace-kicker">INTERACTIVE ALGORITHM LAB</div><h2 id="current-algo-name">Select an Algorithm</h2>
+                    <p id="current-algo-desc" class="text-muted">Choose an algorithm from the sidebar to visualize its underlying mechanics.</p>
+                </div>
+                <div class="metrics">
+                    <div class="metric-card">
+                        <span class="metric-label">TIME COMPLEXITY</span>
+                        <span class="metric-value font-mono" id="complexity-time">-</span>
+                    </div>
+                </div>
+            </header>
+
+            <section class="visualizer-container">
+                <div id="action-hint" class="action-hint hidden"></div>
+                <div id="mid-pointer" class="mid-pointer hidden">↓ MID</div>
+                <div id="array-container" class="array-container">
+                    <!-- Bars are injected dynamically via JS -->
+                </div>
+
+                <div id="result-banner" class="result-banner hidden">
+                    <span id="result-text"></span>
+                </div>
+            </section>
+
+        <section class="enhancements-panel">
+            <div class="enhancement-card counters-card">
+                <div><span class="enhancement-label">COMPARISONS</span><strong id="counter-comparisons">0</strong></div>
+                <div><span class="enhancement-label">SWAPS</span><strong id="counter-swaps">0</strong></div>
+                <div><span class="enhancement-label">STEPS</span><strong id="counter-steps">0</strong></div>
+                <div><span class="enhancement-label">ARRAY SIZE</span><strong id="counter-size">0</strong></div>
+            </div>
+            <div class="enhancement-card mode-card">
+                <span class="enhancement-label">EXECUTION MODE</span>
+                <div class="mode-buttons">
+                    <button id="mode-auto" class="mode-btn active">▶ Auto</button>
+                    <button id="mode-step" class="mode-btn">⏭ Step-by-Step</button>
+                    <button id="next-step" class="mode-btn next" disabled>Next Step →</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="learning-panel">
+            <div class="learning-header">
+                <div>
+                    <span class="enhancement-label">LEARNING MODE</span>
+                    <h3 id="learn-title">Select an algorithm</h3>
+                </div>
+                <button id="pseudocode-toggle" class="learn-toggle">View Pseudocode</button>
+            </div>
+            <div class="complexity-grid">
+                <div><span>Best</span><b id="complexity-best">—</b></div>
+                <div><span>Average</span><b id="complexity-average">—</b></div>
+                <div><span>Worst</span><b id="complexity-worst">—</b></div>
+                <div><span>Space</span><b id="complexity-space">—</b></div>
+                <div><span>Stable</span><b id="complexity-stable">—</b></div>
+            </div>
+            <p id="learn-note">Choose an algorithm to see its learning information.</p>
+            <pre id="pseudocode-box" class="pseudocode-box hidden"></pre>
+        </section>
+
+        <section class="race-panel">
+            <div class="learning-header">
+                <div><span class="enhancement-label">BENCHMARK</span><h3>Algorithm Race</h3></div>
+                <button id="start-race" class="race-btn">🏁 Start Race</button>
+            </div>
+            <p class="race-subtitle">Run the same array through all five sorting algorithms and compare their operations.</p>
+            <div id="race-results" class="race-results"><span>Race results will appear here.</span></div>
+        </section>
+
+        <section class="generator-panel">
+            <div><span class="enhancement-label">INPUT LAB</span><h3>Test different patterns</h3></div>
+            <div class="generator-controls">
+                <label>Size <input id="generator-size" type="number" min="3" max="60" value="12"></label>
+                <label>Pattern <select id="generator-pattern"><option value="random">Random</option><option value="sorted">Sorted</option><option value="reverse">Reverse Sorted</option><option value="nearly">Nearly Sorted</option></select></label>
+                <button id="generate-pattern" class="race-btn">Generate</button>
+            </div>
+        </section>
+
+        </main>
+
+        <!-- Runtime Logs -->
+        <aside class="right-panel">
+            <header class="panel-header">
+                <div><span class="panel-kicker">LIVE FEED</span><h3>Execution Log</h3></div>
+                <span class="status-indicator" id="system-status"></span>
+            </header>
+            <div class="log-container" id="logs-list">
+                <div class="log-entry system">System ready. Choose an algorithm to begin.</div>
+            </div>
+        </aside>
+
+    </div>
+    <script src="script.js"></script>
+    <script src="enhancements.js"></script>
+</body>
+
+</html>
